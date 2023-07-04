@@ -14,6 +14,7 @@ dotenv.config();
 
 import User from './models/userModel.js'
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 
 // connection request
 mongoose.connect(process.env.DB_URL).then((data)=>{
@@ -28,7 +29,7 @@ app.post('/register',async (req,res)=>{
         var hash = bcrypt.hashSync(req.body.password, salt);
 
         const user = new User({
-            name: req.body.name,
+            userName: req.body.userName,
             email: req.body.email,
             password: hash
         })
@@ -40,13 +41,44 @@ app.post('/register',async (req,res)=>{
         })
     }
     catch(err){
-        res.status(500).json(err)
+        res.status(422).json(err)
     }
-    // const {name,email,password} = req.body
-    // User.create({name, email, password})
-    // res.status(201).json({name,email,password})
 })
 
+app.post('/login',async (req,res)=>{
+    try{
+        const user = await User.findOne({
+            userName: req.body.userName
+        })
+        if(!user){
+            res.status(404).json("User not found")
+        }
+        const isPasswordCorrect = await bcrypt.compare(req.body.password,user.password)
+        if(!isPasswordCorrect){
+            res.status(500).json("Wrong password")
+        }
+        const token = jwt.sign({
+            id: user._id,
+            name: user.userName,
+            email: user.email
+        },process.env.JWT)
+        res.cookie("access_token", token, {httpOnly: true}).status(200).json(user)
+    }
+    catch(err){
+        res.status(404).json("User not found")
+    }
+})
+
+app.get('/profile',(req,res)=>{
+    const {access_token} = req.cookie
+    res.json({access_token})
+    // if(!cookieToken){
+
+    // }
+    // else{
+        
+    // }
+})
 
 app.listen(9000,()=>{
     console.log("Server Started")
