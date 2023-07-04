@@ -4,17 +4,16 @@ export const UserContext = createContext()
 
 
 export function UserContextProvider(props){
+  console.log("Provider is rendered")
+
   const [user,setUser] = useState(null)
   useEffect(()=>{
+    console.log("Useffect is rendered")
+    
     if(!user){
-      axios.get('http://localhost:9000/profile',{withCredentials:true})
-      // try{
-      //   const getUser = await axios.get('http://localhost:9000/profile')
-      //   setUser(getUser)
-      // }
-      // catch(err){
-      //   alert("No user found, Regiser now")
-      // }
+        axios.get('http://localhost:9000/profile',{withCredentials:true}).then((value)=>{
+          setUser(value.data)
+        }).catch(err => alert("No user found, Regiser now"))
     }
   },[])
   

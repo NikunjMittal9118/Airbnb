@@ -5,6 +5,7 @@ export const RegisterPage = () => {
   const [userName,setName] = useState('')
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
+  console.log("Registration page is rendered")
 
   async function submit(e){
     e.preventDefault()

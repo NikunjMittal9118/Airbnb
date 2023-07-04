@@ -4,10 +4,12 @@ import morgan from "morgan";
 import dotenv from "dotenv"
 import cors from "cors"
 const app = express()
+import cookieParser from "cookie-parser";
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'
 }))
+app.use(cookieParser())
 app.use(express.json())
 app.use(morgan('dev'))
 dotenv.config();
@@ -62,7 +64,7 @@ app.post('/login',async (req,res)=>{
             name: user.userName,
             email: user.email
         },process.env.JWT)
-        res.cookie("access_token", token, {httpOnly: true}).status(200).json(user)
+        res.cookie("access_token", token).status(200).json(user)
     }
     catch(err){
         res.status(404).json("User not found")
@@ -70,14 +72,18 @@ app.post('/login',async (req,res)=>{
 })
 
 app.get('/profile',(req,res)=>{
-    const {access_token} = req.cookie
-    res.json({access_token})
-    // if(!cookieToken){
-
-    // }
-    // else{
-        
-    // }
+    const token = req.cookies.access_token
+    if(token){
+        jwt.verify(token, process.env.JWT, (err,decoded)=>{
+            if(err){
+                res.send(null)
+            }
+            else{
+                res.send(decoded)
+            }
+        })
+    }
+    return null
 })
 
 app.listen(9000,()=>{
