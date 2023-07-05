@@ -15,7 +15,8 @@ export function UserContextProvider(props){
           setUser(value.data)
         }).catch(err => alert("No user found, Regiser now"))
     }
-  },[])
+    console.log(user)
+  })
   
   return (
     <UserContext.Provider value={{user,setUser}}>
@@ -23,4 +24,3 @@ export function UserContextProvider(props){
     </UserContext.Provider>
   )
 }
-
