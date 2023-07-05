@@ -13,10 +13,10 @@ export const LoginPage = () => {
     try{
       const userInfo = await axios.post('http://localhost:9000/login', {userName,password} ,{withCredentials: true})
       console.log("setUser is called")
-      setDirect(true)
+      defaultUser.setUser(userInfo.data)
       alert("You are successfully logged in")
       console.log("setDirect is called")
-      defaultUser.setUser(userInfo.data)
+      setDirect(true)
       console.log(direct)
     }
     catch(err){

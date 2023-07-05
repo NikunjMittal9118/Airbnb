@@ -3,14 +3,9 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { BrowserRouter} from "react-router-dom"
-import { UserContextProvider } from "./UserContext.jsx"
-console.log("main is rendered")
-ReactDOM.createRoot(document.getElementById('root')).render(
-  
-  <UserContextProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </UserContextProvider>
-  
+
+ReactDOM.createRoot(document.getElementById('root')).render(  
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 )
